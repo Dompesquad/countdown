@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<title>Countdown Pengumuman Kelulusan</title>
+<style>
+  /* Fullscreen background image */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* Ganti link ini dengan link file foto kamu */
+    background-image: url('background-sekolah.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* Overlay gelap supaya tulisan kontras */
+    position: relative;
+  }
+
+  /* overlay semi transparan */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+  }
+
+  /* konten supaya di depan overlay */
+  #container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  #countdown {
+    font-size: 48px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+  }
+</style>
+</head>
+<body>
+
+  <div id="container">
+    <h1>Pengumuman Kelulusan Kelas 9 MTs Muhammadiyah Malino</h1>
+    <div id="countdown">30:40:10</div>
+  </div>
+
+  <script>
+    const countdownEl = document.getElementById('countdown');
+
+    const countdownDuration = 30 * 3600 + 40 * 60 + 10;
+    const targetTimeKey = 'countdownTargetTime';
+
+    let targetTime = localStorage.getItem(targetTimeKey);
+
+    if (!targetTime) {
+      targetTime = Date.now() + countdownDuration * 1000;
+      localStorage.setItem(targetTimeKey, targetTime);
+    } else {
+      targetTime = Number(targetTime);
+    }
+
+    function formatTime(seconds) {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function updateCountdown() {
+      const now = Date.now();
+      let remainingSeconds = Math.floor((targetTime - now) / 1000);
+
+      if (remainingSeconds < 0) {
+        countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
+        localStorage.removeItem(targetTimeKey);
+        clearInterval(interval);
+        // window.location.href = 'pesan-akhir.html'; // Uncomment untuk redirect
+      } else {
+        countdownEl.textContent = formatTime(remainingSeconds);
+      }
+    }
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+  </script>
+
+</body>
+</html>
