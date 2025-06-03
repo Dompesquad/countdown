@@ -16,7 +16,7 @@
       justify-content: center;
       align-items: center;
 
-      background-image: url('background-sekolah1.webp');
+      background-image: url('background-sekolah1.webp'); /* Gambar WebP */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -37,36 +37,21 @@
       z-index: 1;
       text-align: center;
       padding: 20px;
-      width: 100%;
     }
 
-    .marquee {
-      white-space: nowrap;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-
-    .marquee h1 {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 15s linear infinite;
+    h1 {
       font-size: 6vw;
-    }
-
-    @keyframes marquee {
-      0%   { transform: translate(0, 0); }
-      100% { transform: translate(-100%, 0); }
+      margin-bottom: 20px;
     }
 
     #countdown {
       font-size: 10vw;
       font-weight: bold;
       font-family: 'Courier New', Courier, monospace;
-      margin-top: 20px;
     }
 
     @media (min-width: 768px) {
-      .marquee h1 {
+      h1 {
         font-size: 32px;
       }
       #countdown {
@@ -78,9 +63,7 @@
 <body>
 
   <div id="container">
-    <div class="marquee">
-      <h1>Pengumuman Kelulusan Kelas 9 MTs Muhammadiyah Malino</h1>
-    </div>
+    <h1>Pengumuman Kelulusan<br>Kelas 9<br>MTs Muhammadiyah Malino</h1>
     <div id="countdown">Loading...</div>
   </div>
 
@@ -121,7 +104,7 @@
       if (diff <= 0) {
         countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
         clearInterval(interval);
-        // window.location.href = 'pesan-akhir.html';
+        // window.location.href = 'pesan-akhir.html'; // aktifkan jika mau redirect
       } else {
         countdownEl.textContent = formatTime(diff);
       }
