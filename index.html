@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <title>Countdown Pengumuman Kelulusan</title>
 <style>
-  /* Fullscreen background image */
   body {
     margin: 0;
     padding: 0;
@@ -16,17 +15,14 @@
     justify-content: center;
     align-items: center;
 
-    /* Ganti link ini dengan link file foto kamu */
-    background-image: url('background-sekolah.jpg');
+    background-image: url('background_sekolah.JPG');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    /* Overlay gelap supaya tulisan kontras */
     position: relative;
   }
 
-  /* overlay semi transparan */
   body::before {
     content: "";
     position: absolute;
@@ -35,7 +31,6 @@
     z-index: 0;
   }
 
-  /* konten supaya di depan overlay */
   #container {
     position: relative;
     z-index: 1;
@@ -56,50 +51,59 @@
 </head>
 <body>
 
-  <div id="container">
-    <h1>Pengumuman Kelulusan Kelas 9 MTs Muhammadiyah Malino</h1>
-    <div id="countdown">30:40:10</div>
-  </div>
+<div id="container">
+  <h1>Pengumuman Kelulusan Kelas 9 MTs Muhammadiyah Malino</h1>
+  <div id="countdown">Loading...</div>
+</div>
 
-  <script>
-    const countdownEl = document.getElementById('countdown');
+<script>
+  const countdownEl = document.getElementById('countdown');
 
-    const countdownDuration = 30 * 3600 + 40 * 60 + 10;
-    const targetTimeKey = 'countdownTargetTime';
+  function getNextThursday9AM() {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun,1=Mon,...4=Thu,...
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
 
-    let targetTime = localStorage.getItem(targetTimeKey);
+    // Buat tanggal Kamis minggu ini jam 9 pagi
+    const daysUntilThursday = (4 - day + 7) % 7; 
+    let nextThursday = new Date(now);
+    nextThursday.setHours(9,0,0,0); // jam 9 pagi
+    nextThursday.setDate(now.getDate() + daysUntilThursday);
 
-    if (!targetTime) {
-      targetTime = Date.now() + countdownDuration * 1000;
-      localStorage.setItem(targetTimeKey, targetTime);
+    // Jika hari ini Kamis dan sudah lewat jam 9, maka ambil Kamis minggu depan
+    if (day === 4 && (hours > 9 || (hours === 9 && (minutes > 0 || seconds > 0)))) {
+      nextThursday.setDate(nextThursday.getDate() + 7);
+    }
+
+    return nextThursday;
+  }
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  }
+
+  function updateCountdown() {
+    const now = new Date();
+    const target = getNextThursday9AM();
+    let diff = Math.floor((target - now) / 1000);
+
+    if (diff <= 0) {
+      countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
+      clearInterval(interval);
+      // window.location.href = 'pesan-akhir.html'; // jika mau redirect
     } else {
-      targetTime = Number(targetTime);
+      countdownEl.textContent = formatTime(diff);
     }
+  }
 
-    function formatTime(seconds) {
-      const h = Math.floor(seconds / 3600);
-      const m = Math.floor((seconds % 3600) / 60);
-      const s = seconds % 60;
-      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    }
-
-    function updateCountdown() {
-      const now = Date.now();
-      let remainingSeconds = Math.floor((targetTime - now) / 1000);
-
-      if (remainingSeconds < 0) {
-        countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
-        localStorage.removeItem(targetTimeKey);
-        clearInterval(interval);
-        // window.location.href = 'pesan-akhir.html'; // Uncomment untuk redirect
-      } else {
-        countdownEl.textContent = formatTime(remainingSeconds);
-      }
-    }
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-  </script>
+  updateCountdown();
+  const interval = setInterval(updateCountdown, 1000);
+</script>
 
 </body>
 </html>
