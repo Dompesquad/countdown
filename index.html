@@ -1,109 +1,118 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<title>Countdown Pengumuman Kelulusan</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    color: white;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Pengumuman Kelulusan</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
 
-    background-image: url('background-sekolah.JPG');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+      background-image: url('background-sekolah.JPG'); /* Ganti nama file sesuai gambar kamu */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
 
-    position: relative;
-  }
+      position: relative;
+    }
 
-  body::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 0;
-  }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
 
-  #container {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-  }
+    #container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 20px;
+    }
 
-  h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
+    h1 {
+      font-size: 6vw; /* responsif untuk HP dan laptop */
+      margin-bottom: 20px;
+    }
 
-  #countdown {
-    font-size: 48px;
-    font-weight: bold;
-    font-family: 'Courier New', Courier, monospace;
-  }
-</style>
+    #countdown {
+      font-size: 10vw; /* besar di HP tapi menyesuaikan layar */
+      font-weight: bold;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 32px;
+      }
+      #countdown {
+        font-size: 48px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div id="container">
-  <h1>Pengumuman Kelulusan Kelas 9 MTs Muhammadiyah Malino</h1>
-  <div id="countdown">Loading...</div>
-</div>
+  <div id="container">
+    <h1>Pengumuman Kelulusan Kelas 9<br>MTs Muhammadiyah Malino</h1>
+    <div id="countdown">Loading...</div>
+  </div>
 
-<script>
-  const countdownEl = document.getElementById('countdown');
+  <script>
+    const countdownEl = document.getElementById('countdown');
 
-  function getNextThursday9AM() {
-    const now = new Date();
-    const day = now.getDay(); // 0=Sun,1=Mon,...4=Thu,...
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
+    function getNextThursday9AM() {
+      const now = new Date();
+      const day = now.getDay();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
 
-    // Buat tanggal Kamis minggu ini jam 9 pagi
-    const daysUntilThursday = (4 - day + 7) % 7; 
-    let nextThursday = new Date(now);
-    nextThursday.setHours(9,0,0,0); // jam 9 pagi
-    nextThursday.setDate(now.getDate() + daysUntilThursday);
+      const daysUntilThursday = (4 - day + 7) % 7;
+      const target = new Date(now);
+      target.setHours(9, 0, 0, 0);
+      target.setDate(now.getDate() + daysUntilThursday);
 
-    // Jika hari ini Kamis dan sudah lewat jam 9, maka ambil Kamis minggu depan
-    if (day === 4 && (hours > 9 || (hours === 9 && (minutes > 0 || seconds > 0)))) {
-      nextThursday.setDate(nextThursday.getDate() + 7);
+      if (day === 4 && (hours > 9 || (hours === 9 && (minutes > 0 || seconds > 0)))) {
+        target.setDate(target.getDate() + 7);
+      }
+
+      return target;
     }
 
-    return nextThursday;
-  }
-
-  function formatTime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-  }
-
-  function updateCountdown() {
-    const now = new Date();
-    const target = getNextThursday9AM();
-    let diff = Math.floor((target - now) / 1000);
-
-    if (diff <= 0) {
-      countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
-      clearInterval(interval);
-      // window.location.href = 'pesan-akhir.html'; // jika mau redirect
-    } else {
-      countdownEl.textContent = formatTime(diff);
+    function formatTime(seconds) {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
-  }
 
-  updateCountdown();
-  const interval = setInterval(updateCountdown, 1000);
-</script>
+    function updateCountdown() {
+      const now = new Date();
+      const target = getNextThursday9AM();
+      let diff = Math.floor((target - now) / 1000);
+
+      if (diff <= 0) {
+        countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
+        clearInterval(interval);
+        // window.location.href = 'pesan-akhir.html'; // aktifkan jika mau redirect
+      } else {
+        countdownEl.textContent = formatTime(diff);
+      }
+    }
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+  </script>
 
 </body>
 </html>
