@@ -15,12 +15,10 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-
-      background-image: url('background-sekolah1.webp'); /* Gambar WebP */
+      background-image: url('background-sekolah1.webp');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
       position: relative;
     }
 
@@ -50,6 +48,26 @@
       font-family: 'Courier New', Courier, monospace;
     }
 
+    #cek-link {
+      margin-top: 30px;
+      display: none;
+    }
+
+    #cek-link a {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #cek-link a:hover {
+      background-color: #218838;
+    }
+
     @media (min-width: 768px) {
       h1 {
         font-size: 32px;
@@ -65,10 +83,14 @@
   <div id="container">
     <h1>Pengumuman Kelulusan<br>Kelas 9<br>MTs Muhammadiyah Malino</h1>
     <div id="countdown">Loading...</div>
+    <div id="cek-link">
+      <a href="https://tinyurl.com/CekKelulusanMu" target="_blank">Cek Pengumumanmu</a>
+    </div>
   </div>
 
   <script>
     const countdownEl = document.getElementById('countdown');
+    const cekLink = document.getElementById('cek-link');
 
     function getNextThursday9AM() {
       const now = new Date();
@@ -102,9 +124,9 @@
       let diff = Math.floor((target - now) / 1000);
 
       if (diff <= 0) {
-        countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
         clearInterval(interval);
-        // window.location.href = 'pesan-akhir.html'; // aktifkan jika mau redirect
+        countdownEl.textContent = "Waktu Pengumuman Telah Tiba!";
+        cekLink.style.display = "block";
       } else {
         countdownEl.textContent = formatTime(diff);
       }
